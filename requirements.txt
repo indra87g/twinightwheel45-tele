@@ -1,2 +1,8 @@
-aiohttp
-aioredis
+# Telegram Bot Framework
+pyTelegramBotAPI
+
+# For loading .env files
+python-dotenv
+
+# For database connection
+redis
