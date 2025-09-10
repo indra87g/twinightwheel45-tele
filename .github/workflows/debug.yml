@@ -1,0 +1,34 @@
+name: Debug Telegram Bot
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create .env file from secret
+        run: echo "TELEGRAM_APIKEY=${{ secrets.TELEGRAM_APIKEY }}" > .env
+        env:
+          TELEGRAM_APIKEY: ${{ secrets.TELEGRAM_APIKEY }}
+
+      - name: Run bot for 5 minutes
+        run: |
+          python main.py &
+          BOT_PID=$!
+          echo "Bot started with PID $BOT_PID"
+          sleep 300
+          echo "5 minutes are up. Stopping the bot."
+          kill $BOT_PID
+          echo "Bot process killed."
